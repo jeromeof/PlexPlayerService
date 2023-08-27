@@ -25,12 +25,12 @@ com.pragmaticaudio.plexservice.StandalonePlexPlayerTest > testServer STANDARD_OU
     Please verify in 30 seconds .....
 ```
 
-This means the instance has not been linked with your plex instance (this will bee needed in the Android Settings 'activity' also).
+This means the instance has not been linked with your plex instance (equivalent code will be needed in the Android Settings 'activity' when running as an android 'service' but in the standalone version I just need a local .yml file).
 
 So open the URL e.g.  https://www.plex.tv/link/?pin=XY11 in the example above.
 
-This should allow you to login to plex and link the account - if you do this within 30 seconds the unit test will continue to
-give you details of the ~/.plexPlayer.yml that you should create (so you can run multiple times without needing a new token each time).
+This should allow you to login to your plex account and link that account with this instance - if you do this within 30 seconds the unit test will continue to
+give you details of content requried within the local ~/.plexPlayer.yml that you should create (so you can run multiple times without needing a new token each time).
 
 e.g.
 ```
@@ -55,7 +55,7 @@ com.pragmaticaudio.plexservice.StandalonePlexPlayerTest > testServer STANDARD_OU
     PlexPlayer Running ....
 
 ```
-Simple copy these details into the yml file in that location and stop and restart the unit tests again, i.e.
+Simple copy these details from token: down to resourceIdenfifieir into this yml file in that location and then stop (with Ctrl Break) the unit tests and then restart the unit tests again, i.e.
 
 ```
 gradle test -i   
