@@ -16,5 +16,5 @@ public interface BaseConverter {
      * @param <T>
      * @return объект
      */
-    <T> T writeValue(byte[] src, Class<T> valueType);
+    <T> T readValue(byte[] src, Class<T> valueType);
 }

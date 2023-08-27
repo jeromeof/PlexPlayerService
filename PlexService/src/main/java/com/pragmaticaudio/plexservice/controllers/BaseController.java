@@ -1,5 +1,6 @@
 package com.pragmaticaudio.plexservice.controllers;
 
+import com.pragmaticaudio.plexservice.MediaPlayer;
 import com.pragmaticaudio.plexservice.PlexPlayerServer;
 import com.pragmaticaudio.plexservice.controllers.entities.PlexPlayerInfo;
 import com.pragmaticaudio.restserver.annotations.ExceptionHandler;
@@ -13,6 +14,8 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import androidx.annotation.Nullable;
 
 public class BaseController {
 
@@ -34,6 +37,10 @@ public class BaseController {
         return getPlexHeader(requestInfo, X_PLEX_CLIENT_IDENTIFIER);
     }
 
+    protected String getDeviceName(RequestInfo requestInfo) {
+        return getPlexHeader(requestInfo, X_PLEX_DEVICE_NAME);
+    }
+
     protected void addPlexHeaderToResponse(ResponseInfo responseInfo, String headerName, String value) {
         responseInfo.addHeader(PLEX_HEADER_PREFIX + headerName, value );
     }
@@ -45,15 +52,23 @@ public class BaseController {
         }
         return result;
     }
-
-    protected String getDeviceNme(RequestInfo requestInfo) {
-        return getPlexHeader(requestInfo, X_PLEX_DEVICE_NAME);
+    protected void addAllowHeadersToResponse(ResponseInfo responseInfo) {
+        responseInfo.addHeader("Access-Control-Allow-Origin", "*");
+        responseInfo.addHeader("Access-Control-Max-Age", "1209600");
+        responseInfo.addHeader("Access-Control-Expose-Headers","X-Plex-Client-Identifier");
+        responseInfo.addHeader("Access-Control-Allow-Private-Network", "true");
+        responseInfo.addHeader("Access-Control-Allow-Headers", "*");
     }
 
     protected String getPlexParameter(RequestInfo requestInfo, String fieldName) {
-        List<String> strings = requestInfo.getParameters().get(PLEX_HEADER_PREFIX + fieldName);
+        String param = PLEX_HEADER_PREFIX + fieldName;
+        return getParameter(requestInfo, param);
+    }
+
+    protected String getParameter(RequestInfo requestInfo, String param) {
+        List<String> strings = requestInfo.getParameters().get(param);
         if (strings != null) {
-            return strings.get(0);  // Just the first for now
+            return strings.get(0);
         }
         return null;
     }
@@ -141,4 +156,21 @@ public class BaseController {
         String throwableStr = getStackTrace(throwable);
         response.setBody(throwableStr.getBytes());
     }
+
+    protected MediaPlayer getMediaPlayer() {
+        return plexPlayerServer.getMediaPlayer();
+    }
+
+
+    protected void validateStandardPlexHeaders(RequestInfo requestInfo) {
+        // Get the headers from the header request
+        String targetClientIdentifier = getTargetClientIdentifier(requestInfo);
+        String clientIdentifier = getClientIdentifier(requestInfo);
+        String deviceName = getDeviceName(requestInfo);
+
+        // validate that they are correct for us e.g
+
+    }
+
+
 }

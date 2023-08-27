@@ -68,7 +68,7 @@ public class PlexPlayerDaemon extends Service {
                     // Finally broadcast our availability over GDM
                     declareOurAvailability(settings);
 
-                    plexPlayerServer = new PlexPlayerServer(settings, new AndroidLogger());
+                    plexPlayerServer = new PlexPlayerServer(settings, new AndroidLogger(), new AndroidMediaPlayer());
 
                     plexPlayerServer.start();
 

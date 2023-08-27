@@ -1,5 +1,6 @@
 package com.pragmaticaudio.plexservice.controllers.entities;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 public class Media {
@@ -22,7 +23,9 @@ public class Media {
     @JacksonXmlProperty(isAttribute = true)
     private String container;
 
-    private Part Part;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @JacksonXmlProperty(localName = "Part")
+    private Part part;
 
     // getters, setters, and other methods...
 
@@ -43,11 +46,11 @@ public class Media {
     }
 
     public com.pragmaticaudio.plexservice.controllers.entities.Part getPart() {
-        return Part;
+        return this.part;
     }
 
     public void setPart(com.pragmaticaudio.plexservice.controllers.entities.Part part) {
-        Part = part;
+        this.part = part;
     }
 
     public String getId() {

@@ -8,6 +8,7 @@ import com.pragmaticaudio.plexservice.controllers.PlayerTimelinePollController;
 import com.pragmaticaudio.plexservice.controllers.PlayerTimelineSubscribeController;
 import com.pragmaticaudio.plexservice.controllers.PlayerTimelineUnsubscribeController;
 import com.pragmaticaudio.plexservice.controllers.ResourcesController;
+import com.pragmaticaudio.plexservice.controllers.SeekToController;
 import com.pragmaticaudio.plexservice.controllers.SetParametersController;
 import com.pragmaticaudio.plexservice.controllers.SkipNextController;
 import com.pragmaticaudio.plexservice.controllers.SkipPreviousController;
@@ -32,6 +33,7 @@ import java.util.Map;
                 SkipNextController.class,
                 SkipPreviousController.class,
                 StopController.class,
+                SeekToController.class,
                 PlayController.class,
                 PauseController.class
         } )
@@ -40,13 +42,15 @@ public class PlexPlayerServer extends BaseRestServer {
 
     private final Map<String, Object> settings;         // Initially just store this here
     private final PlexPlayerLogger logger;
+    private final MediaPlayer mediaPlayer;
 
     private final PlexCloudService plexCloudService = new PlexCloudService();
 
-    public PlexPlayerServer(Map<String, Object> settings, PlexPlayerLogger logger) {
+    public PlexPlayerServer(Map<String, Object> settings, PlexPlayerLogger logger, MediaPlayer mediaPlayer) {
         super();
         this.settings = settings;   // Save settings so Controllers can use them
         this.logger = logger;
+        this.mediaPlayer = mediaPlayer;
     }
 
     public void start() throws IOException {
@@ -97,5 +101,9 @@ public class PlexPlayerServer extends BaseRestServer {
 
     public void logMessage(String message) {
         logger.logMessage(message);
+    }
+
+    public MediaPlayer getMediaPlayer() {
+        return mediaPlayer;
     }
 }

@@ -20,7 +20,7 @@ public class XmlConverter implements BaseConverter {
     }
 
     @Override
-    public <T> T writeValue(byte[] src, Class<T> valueType) {
+    public <T> T readValue(byte[] src, Class<T> valueType) {
         try {
             return mapper.readValue(src, valueType);
         } catch (IOException e) {

@@ -1,0 +1,48 @@
+<MediaContainer commandID="2">
+    <Timeline address="192-168-31-201.f2a4a32b24354350827fe07f9d3d9865.plex.direct" containerKey="/playQueues/2798" controllable="volume,repeat,skipPrevious,seekTo,stepBack,stepForward,stop,playPause,shuffle,skipNext" duration="234051"
+        itemType="music" key="/library/metadata/118520" machineIdentifier="35c96b643f0542be13e332f377fcdda6d4fa7dd0" playQueueID="2798"
+        playQueueItemID="85013" playQueueVersion="1" port="32400" protocol="https" ratingKey="118520"
+        repeat="0"
+        shuffle="0"
+        state="paused" time="36270"
+        type="music" volume="21">
+        <Track addedAt="1684663214" art="/library/metadata/61265/art/1692797755" duration="234051"
+            grandparentArt="/library/metadata/61265/art/1692797755" grandparentGuid="plex://artist/5d07bbfd403c6402904a6749"
+            grandparentKey="/library/metadata/61265"
+            grandparentRatingKey="61265"
+            grandparentThumb="/library/metadata/61265/thumb/1692797755" grandparentTitle="Elton John"
+            guid="plex://track/5d07ceb3403c6402900bcb5d" index="1" key="/library/metadata/118520"
+            lastViewedAt="1693167539" librarySectionID="1" librarySectionKey="/library/sections/1"
+            librarySectionTitle="Music" musicAnalysisVersion="1"
+            parentGuid="plex://album/5d07c1a3403c6402908607d2" parentIndex="2" parentKey="/library/metadata/118511" parentRatingKey="118511"
+            parentStudio="DJM Records" parentThumb="/library/metadata/118511/thumb/1691976933" parentTitle="Goodbye Yellow Brick Road" parentYear="1973"
+            playQueueItemID="85013" ratingCount="47810"
+            ratingKey="118520"
+            skipCount="8"
+            source="35c96b643f0542be13e332f377fcdda6d4fa7dd0"
+            summary="" thumb="/library/metadata/118511/thumb/1691976933"
+            title="Sweet Painted Lady" type="track" updatedAt="1691341422"
+            viewCount="17">
+            <Media audioChannels="2" audioCodec="flac" bitrate="828" container="flac" duration="234051"
+                id="110416">
+                <Part container="flac" duration="234051" file="/data/music/Elton John/Goodbye Yellow Brick Road/09. Sweet Painted Lady.flac"
+                    hasThumbnail="1"
+                    id="115915" key="/library/parts/115915/1684235859/file.flac" size="24345409">
+                    <Stream albumGain="-8.62" albumPeak="1.000000" albumRange="10.395878" audioChannelLayout="stereo" bitDepth="16"
+                        bitrate="828" channels="2" codec="flac" displayTitle="FLAC (Stereo)"
+                        endRamp="-51.00 0.15;-37.37 3.25;-29.91 4.65;-23.52 5.55;-20.93 6.95;-17.69 8.25;-14.40 13.65;-11.78 14.05;-8.55 14.55;-5.47 16.45;-2.78 19.35;0.23 25.25;3.70 40.75;" extendedDisplayTitle="FLAC (Stereo)" gain="-8.62"
+                        id="308716"
+                        index="0" loudness="-14.90" lra="5.97" peak="0.894196"
+                        samplingRate="44100"
+                        selected="1"
+                        startRamp="-51.00 0.00;-22.32 0.10;-15.46 0.20;-11.89 0.30;-5.44 1.30;-2.26 1.40;0.74 5.60;4.00 42.00;" streamType="2" />
+                    <Stream codec="lrc" displayTitle="LRC (External)" extendedDisplayTitle="LRC (External)" format="lrc"
+                        id="308747" key="/library/streams/308747" minLines="3" provider="com.plexapp.agents.lyricfind"
+                        streamType="4" timed="1" />
+                </Part>
+            </Media>
+        </Track>
+    </Timeline>
+    <Timeline state="stopped" type="video" />
+    <Timeline state="stopped" type="photo" />
+</MediaContainer>

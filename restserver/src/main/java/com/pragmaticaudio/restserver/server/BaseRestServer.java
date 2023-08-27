@@ -224,7 +224,7 @@ public abstract class BaseRestServer {
                         if (converter != null) {
                             Class paramClass = methodInfo.getParamClass();
                             if (paramClass != null && requestInfo.isBodyAvailable()) {
-                                paramObject = converter.writeValue(requestInfo.getBody(), paramClass);
+                                paramObject = converter.readValue(requestInfo.getBody(), paramClass);
                             }
                         }
                         Context androidContext = null;

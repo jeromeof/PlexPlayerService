@@ -1,5 +1,6 @@
 package com.pragmaticaudio.plexservice.controllers.entities;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 public class Part {
@@ -25,7 +26,9 @@ public class Part {
     @JacksonXmlProperty(isAttribute = true)
     private String hasThumbnail;
 
-    private Stream Stream;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @JacksonXmlProperty(localName = "Stream")
+    private Stream stream;
 
     // getters, setters, and other methods...
 
@@ -46,11 +49,11 @@ public class Part {
     }
 
     public com.pragmaticaudio.plexservice.controllers.entities.Stream getStream() {
-        return Stream;
+        return this.stream;
     }
 
     public void setStream(com.pragmaticaudio.plexservice.controllers.entities.Stream stream) {
-        Stream = stream;
+        this.stream = stream;
     }
 
     public String getId() {

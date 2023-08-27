@@ -21,6 +21,8 @@ public class PlexCloudService {
     private static final String CHECKPINS = "https://plex.tv/pins/%s.xml";
     private static final String DEVICES_UPDATE = "https://plex.tv/devices/%s?X-Plex-Token=%s";
 
+    private static final String LOADMEDIA_URL = "%s/%s/%s";
+
     private static final String DEVICES_UPDATE_BODY = "Connection[][uri]=http://%s:%s";
 
     private OkHttpClient client = new OkHttpClient();
@@ -41,7 +43,7 @@ public class PlexCloudService {
             String xmlResponse = response.body().string();
 
             XmlConverter xmlConverter = new XmlConverter();
-            PlexPinInfo plexPinInfo = xmlConverter.writeValue(xmlResponse.getBytes(), PlexPinInfo.class);
+            PlexPinInfo plexPinInfo = xmlConverter.readValue(xmlResponse.getBytes(), PlexPinInfo.class);
             return plexPinInfo;
         }
     }
@@ -62,7 +64,7 @@ public class PlexCloudService {
             String xmlResponse = response.body().string();
 
             XmlConverter xmlConverter = new XmlConverter();
-            PlexPinInfo plexPinInfo = xmlConverter.writeValue(xmlResponse.getBytes(), PlexPinInfo.class);
+            PlexPinInfo plexPinInfo = xmlConverter.readValue(xmlResponse.getBytes(), PlexPinInfo.class);
             return plexPinInfo;
         }
     }
@@ -104,13 +106,31 @@ public class PlexCloudService {
             }
         }
     }
+
+    public void loadMediaFromPlexServer(String cloudServer, String token, String machineIdentifier, String key, String containerKey, String type) {
+        String url = String.format(LOADMEDIA_URL, cloudServer, key, containerKey, type);
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .headers(mediaServerHeaders(token, machineIdentifier))
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new IOException("Unexpected response: " + response);
+            }
+
+            String xmlResponse = response.body().string();
+
+            XmlConverter xmlConverter = new XmlConverter();
+//            PlexPinInfo plexPinInfo = xmlConverter.readValue(xmlResponse.getBytes(), PlexPinInfo.class);
+//            return plexPinInfo;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Headers mediaServerHeaders(String token, String machineIdentifier) {
+        return null;    // TODO: add other headers
+    }
 }
-/*
-    'X-Plex-Client-Identifier': 'identifier',
-    'X-Plex-Product': 'product',
-    'X-Plex-Version': 'version',
-    'X-Plex-Device': 'device',
-    'X-Plex-Device-Name': 'deviceName',
-    'X-Plex-Platform': 'platform',
-    'X-Plex-Platform-Version': 'platformVersion'
- */

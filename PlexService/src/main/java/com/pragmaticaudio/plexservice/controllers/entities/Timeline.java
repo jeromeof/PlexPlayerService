@@ -1,8 +1,17 @@
 package com.pragmaticaudio.plexservice.controllers.entities;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 public class Timeline {
+
+    public Timeline() {
+    }
+
+    public Timeline(String state, String type) {
+        this.state = state;
+        this.type = type;
+    }
 
     @JacksonXmlProperty(isAttribute = true)
     private String state;
@@ -61,9 +70,12 @@ public class Timeline {
     @JacksonXmlProperty(isAttribute = true)
     private String port;
 
-    private Track Track;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @JacksonXmlProperty(localName = "Track")
+    private Track track;
 
     // getters, setters, and other methods...
+
 
     public String getAddress() {
         return address;
@@ -82,11 +94,11 @@ public class Timeline {
     }
 
     public Track getTrack() {
-        return Track;
+        return this.track;
     }
 
     public void setTrack(Track track) {
-        Track = track;
+        this.track = track;
     }
 
     public String getState() {

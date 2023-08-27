@@ -34,34 +34,6 @@ public class Utils {
         try { return str.getBytes("UTF-8"); } catch (Exception ex) { return null; }
     }
 
-    /**
-     * Load UTF8withBOM or any ansi text file.
-     * @param filename which to be converted to string
-     * @return String value of File
-     * @throws java.io.IOException if error occurs
-     */
-    public static String loadFileAsString(String filename) throws java.io.IOException {
-        final int BUFLEN=1024;
-        BufferedInputStream is = new BufferedInputStream(new FileInputStream(filename), BUFLEN);
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream(BUFLEN);
-            byte[] bytes = new byte[BUFLEN];
-            boolean isUTF8=false;
-            int read,count=0;
-            while((read=is.read(bytes)) != -1) {
-                if (count==0 && bytes[0]==(byte)0xEF && bytes[1]==(byte)0xBB && bytes[2]==(byte)0xBF ) {
-                    isUTF8=true;
-                    baos.write(bytes, 3, read-3); // drop UTF8 bom marker
-                } else {
-                    baos.write(bytes, 0, read);
-                }
-                count+=read;
-            }
-            return isUTF8 ? new String(baos.toByteArray(), "UTF-8") : new String(baos.toByteArray());
-        } finally {
-            try{ is.close(); } catch(Exception ignored){}
-        }
-    }
 
     /**
      * Returns MAC address of the given interface name.
@@ -91,6 +63,38 @@ public class Utils {
             return null;
         }*/
     }
+
+
+    /**
+     * Load UTF8withBOM or any ansi text file.
+     * @param filename which to be converted to string
+     * @return String value of File
+     * @throws java.io.IOException if error occurs
+     */
+    /*
+    public static String loadFileAsString(String filename) throws java.io.IOException {
+        final int BUFLEN=1024;
+        BufferedInputStream is = new BufferedInputStream(new FileInputStream(filename), BUFLEN);
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream(BUFLEN);
+            byte[] bytes = new byte[BUFLEN];
+            boolean isUTF8=false;
+            int read,count=0;
+            while((read=is.read(bytes)) != -1) {
+                if (count==0 && bytes[0]==(byte)0xEF && bytes[1]==(byte)0xBB && bytes[2]==(byte)0xBF ) {
+                    isUTF8=true;
+                    baos.write(bytes, 3, read-3);
+                } else {
+                    baos.write(bytes, 0, read);
+                }
+                count+=read;
+            }
+            return isUTF8 ? new String(baos.toByteArray(), "UTF-8") : new String(baos.toByteArray());
+        } finally {
+            try{ is.close(); } catch(Exception ignored){}
+        }
+    }
+    */
 
     /**
      * Get IP address from first non-localhost interface

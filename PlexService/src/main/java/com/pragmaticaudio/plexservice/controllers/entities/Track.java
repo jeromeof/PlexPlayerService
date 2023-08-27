@@ -1,5 +1,6 @@
 package com.pragmaticaudio.plexservice.controllers.entities;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 public class Track {
@@ -106,7 +107,13 @@ public class Track {
     @JacksonXmlProperty(isAttribute = true)
     private String source;
 
-    private Media Media;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @JacksonXmlProperty(localName = "Media")
+    private Media media;
+
+    private String art;
+
+    private String grandparentArt;
 
     // getters, setters, and other methods...
 
@@ -127,11 +134,11 @@ public class Track {
     }
 
     public com.pragmaticaudio.plexservice.controllers.entities.Media getMedia() {
-        return Media;
+        return this.media;
     }
 
     public void setMedia(com.pragmaticaudio.plexservice.controllers.entities.Media media) {
-        Media = media;
+        this.media = media;
     }
 
     public String getPlayQueueItemID() {
@@ -388,5 +395,21 @@ public class Track {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public String getArt() {
+        return art;
+    }
+
+    public void setArt(String art) {
+        this.art = art;
+    }
+
+    public String getGrandparentArt() {
+        return grandparentArt;
+    }
+
+    public void setGrandparentArt(String grandparentArt) {
+        this.grandparentArt = grandparentArt;
     }
 }
