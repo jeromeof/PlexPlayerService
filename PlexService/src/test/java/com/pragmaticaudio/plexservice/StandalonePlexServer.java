@@ -169,7 +169,7 @@ public class StandalonePlexServer {
         try (InputStream in = new FileInputStream(yamlFilePath)) {
             return yaml.load(in);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to load YAML file from: " + yamlFilePath, e);
+            return null;    // Just handle the missing settings in the caller
         }
     }
 
