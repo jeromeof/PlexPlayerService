@@ -1,20 +1,21 @@
 # Plex player Service - Introduction
 The Play Player Service is what I believe is required technically to
-support a minimal viable plex  'endpoint'  player on Android. Effectively
+support a minimal viable plex 'endpoint'  player on Android. Effectively
 allowing an android 'music' application running this code to be cast a music stream from a plex or
-plexamp client controller running somewhere else on the home network e.g. a users mobile phone.
+plexamp client running somewhere else on the home network e.g. a users mobile phone.
 
 This capability is especially useful for Network
 streaming products built using Android where the user might want use plex
 on their mobile phones to control and 'cast' their plex playlists and music
-to their network streamer maybe on the other side of the room.
+streams directly to their network streamer on the other side of the room without
+having to launch the offical Plex App on that device.
 
 This is similar in use-case to Roon endpoint or Spotify connect, in that the Music Streamer should appear inside the PlexAmp (or Plex) application automatically within the home network.
 
 The initial version will implement just the timeline and playback capabilties.
 
 I may add the playqueues capabilities typical of a 'full' plex / plexamp
-player later
+player later.
 
 ## Plex player Service - technical details
 This module implements the plex 'player' protocol as outlined originally  
@@ -27,14 +28,13 @@ supporting 'cast' capbilties to a different Plex 'Player' on the home
 network. Plex's own Raspberry PI based 'headless' PlexAmp is one popular
 such player but this code can provide a simple alternative which can be
 integrated into another Android App rather than require that a user runs
-the plex or PlexAmp on their Android Streamer Device.
+the offical Plex or PlexAmp separately on their Android Streamer Device.
 
-But here is my summary of what is required. There are effectively 6
-separate components here.
+There are effectively 6 separate components here.
 1. Broadcast availability on the local network of the player 'availability'
 2. Listen for broadcast packets from any plex client on the local network and response directly to that client
-3. Provide support for the user to link this Plex Player app to their plex account as we need a valid plex token
-4. Provide a 'resources' endpoint declaring that the player running and providing its capabilities
+3. Provide code and some sample android settings activities to allow the end user to link this Plex Player app to their plex account
+4. Provide a 'resources' endpoint declaring that the player running and providing its capabilities to the offical Plex / PlexAmp app on the home network.
 5. Provide a timeline endpoint keeping the player in sync with the client 'controller' (optionally provide subscribe / unsubscribe)
 6. Provide the various 'player' capabilties playMedia, play, pause, stop, skipForward etc
 
@@ -44,9 +44,12 @@ media player screen showing the album art and artist, album track metadata about
 the stream being played. The basic controls will be in place to pause, stop and
 skip forward / backward in the track and onto the next.
 
+Note: for simplisticty in 'testing' I have a standalone unit test which runs the same
+codebase as a java application (without needing to configure the Android emulator for UDP packets)
+
 ## Overview of the codebase
 There are 3 Android modules in this project:
-1. PlexPlayerExample - a minimal android App
+1. PlexPlayerExample - a minimal android App - will be expanded as needed to demostrate the 'Service'
 2. PlexService - The plex player background 'service' (android intent service)
 3. RestServer - a modified copy of RestServer by Skornei
 
@@ -60,7 +63,7 @@ to receive metadata from the PlexService as its playing music.
 This is the main logic of this project and it implements the necessary
 endpoints and other integrations required to look like a plex player device
 on a home network. Since it uses the RestServer each 'endpoint' is
-implemented as a Contrller in the contollersfolder.
+implemented as a Contrller in the contollers folder.
 
 These Controllers
 typically a Get controller which will read http parameters from the request
