@@ -1,16 +1,15 @@
 # Plex player Service - Introduction
 The Play Player Service is what I believe is required technically to
-support a minimal viable plex  'endpoint'  player on Android.Effectively
-allowed an android device to be cast a music stream from a plex or
-plexamp client controller running
-on an end users phone.
+support a minimal viable plex  'endpoint'  player on Android. Effectively
+allowing an android 'music' application running this code to be cast a music stream from a plex or
+plexamp client controller running somewhere else on the home network e.g. a users mobile phone.
 
 This capability is especially useful for Network
 streaming products built using Android where the user might want use plex
 on their mobile phones to control and 'cast' their plex playlists and music
 to their network streamer maybe on the other side of the room.
 
-This is similar in use-case to Roon endpoint or Spotify connect.
+This is similar in use-case to Roon endpoint or Spotify connect, in that the Music Streamer should appear inside the PlexAmp (or Plex) application automatically within the home network.
 
 The initial version will implement just the timeline and playback capabilties.
 
