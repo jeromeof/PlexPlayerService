@@ -1,7 +1,9 @@
 package com.pragmaticaudio.plexservice.controllers;
 
 import com.pragmaticaudio.plexservice.PlexCloudService;
+import com.pragmaticaudio.plexservice.PlexMediaPlayer;
 import com.pragmaticaudio.plexservice.controllers.entities.MediaContainer;
+import com.pragmaticaudio.plexservice.controllers.entities.PlayQueueMediaContainer;
 import com.pragmaticaudio.restserver.annotations.Produces;
 import com.pragmaticaudio.restserver.annotations.RestController;
 import com.pragmaticaudio.restserver.annotations.methods.GET;
@@ -19,18 +21,6 @@ public class PlayMediaController extends BaseController {
     public String playMedia(RequestInfo requestInfo, ResponseInfo responseInfo) {
         validateStandardPlexHeaders(requestInfo);
 
-        // Eg. source=35c96b643f0542be13e332f377fcdda6d4fa7dd0
-        //     containerKey=%2FplayQueues%2F2795%3Fown%3D1
-        //     key=%2Flibrary%2Fmetadata%2F118055
-        //     offset=9797
-        //     token=transient-d8dfa2fc-bcb3-4e3a-a8a0-2bc747d6ac2e
-        //     includeExternalMedia=1
-        //     type=music
-        //     protocol=https
-        //     address=192-168-31-201.f2a4a32b24354350827fe07f9d3d9865.plex.direct
-        //     port=32400
-        //     machineIdentifier=35c96b643f0542be13e332f377fcdda6d4fa7dd0
-        //     commandID=13
         Boolean paused = getSingleParamValueAsBoolean(requestInfo,"paused");
         Boolean includeExternalMedia = getSingleParamValueAsBoolean(requestInfo,"includeExternalMedia");
 
@@ -38,7 +28,7 @@ public class PlayMediaController extends BaseController {
 
         String protocol = getSingleParamValue(requestInfo, "protocol");
         String address = getSingleParamValue(requestInfo, "address");
-        Long port = getSingleParamValueAsLong(requestInfo, "port");
+        String port = getSingleParamValue(requestInfo, "port");
         String token = getSingleParamValue(requestInfo, "token");
         String type = getSingleParamValue(requestInfo, "type");
 
@@ -49,8 +39,13 @@ public class PlayMediaController extends BaseController {
 
         String commandID = getSingleParamValue(requestInfo, "commandID");
 
-        String cloudServer = protocol + ":" + address + ":" + port;
-        plexCloudService.loadMediaFromPlexServer(cloudServer, token, machineIdentifier, key, containerKey, type);
+        String serverURI = PlexCloudService.formatServerURI(protocol, address, port);
+
+        PlayQueueMediaContainer playQueueMediaContainer = plexCloudService.loadMediaFromPlexServer(serverURI, token, containerKey);
+
+        // So assuming we haven't seen an exception - lets delegate this PlayQueue entity to PlexMediaPlayer to start playing
+        PlexMediaPlayer plexMediaPlayer = getMediaPlayer();
+        plexMediaPlayer.createOrReplaceQueue(playQueueMediaContainer, serverURI, token);
 
         return "";  // Seems to be an empty response if successful
     }

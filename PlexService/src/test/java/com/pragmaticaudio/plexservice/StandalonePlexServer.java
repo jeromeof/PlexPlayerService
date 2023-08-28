@@ -53,7 +53,7 @@ public class StandalonePlexServer {
             ourIpAddress = Utils.getIPAddress(true);
             settings.put("ourIpAddress", ourIpAddress);
         }
-        plexPlayerServer = new PlexPlayerServer( settings , new ConsoleLogger(), new JavaFXMediaPlayer());
+        plexPlayerServer = new PlexPlayerServer( settings , new ConsoleLogger(), new MockMediaPlayer());
 
         plexPlayerServer.start();
 

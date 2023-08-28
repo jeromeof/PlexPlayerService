@@ -42,11 +42,11 @@ public class PlexPlayerServer extends BaseRestServer {
 
     private final Map<String, Object> settings;         // Initially just store this here
     private final PlexPlayerLogger logger;
-    private final MediaPlayer mediaPlayer;
+    private final PlexMediaPlayer mediaPlayer;
 
     private final PlexCloudService plexCloudService = new PlexCloudService();
 
-    public PlexPlayerServer(Map<String, Object> settings, PlexPlayerLogger logger, MediaPlayer mediaPlayer) {
+    public PlexPlayerServer(Map<String, Object> settings, PlexPlayerLogger logger, PlexMediaPlayer mediaPlayer) {
         super();
         this.settings = settings;   // Save settings so Controllers can use them
         this.logger = logger;
@@ -103,7 +103,7 @@ public class PlexPlayerServer extends BaseRestServer {
         logger.logMessage(message);
     }
 
-    public MediaPlayer getMediaPlayer() {
+    public PlexMediaPlayer getMediaPlayer() {
         return mediaPlayer;
     }
 }

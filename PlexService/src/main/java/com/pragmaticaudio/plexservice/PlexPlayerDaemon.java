@@ -3,10 +3,12 @@ package com.pragmaticaudio.plexservice;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -28,6 +30,10 @@ import java.util.Map;
 
 import androidx.annotation.Nullable;
 
+/**
+ * Main Android 'Service' which can interface with Android e.g. play Media, handle threads, generate
+ * android logs etc but then also starts the
+ */
 public class PlexPlayerDaemon extends Service {
 
     // First some settings which can be in the intent
@@ -44,7 +50,7 @@ public class PlexPlayerDaemon extends Service {
 
     private PlexGDM plexGDM = new PlexGDM();
 
-
+    private MediaPlayer currentMediaPlayer, nextMediaPlayer;
     private HandlerThread discoveryThread;
     private Handler discoveryHandler;
 
@@ -52,11 +58,30 @@ public class PlexPlayerDaemon extends Service {
     private Handler broadcastHandler;
     List<PlexServerInfo> plexServers = new LinkedList<>();
 
+    private final IBinder binder = new LocalBinder();
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return binder;
+    }
+
+    public class LocalBinder extends Binder {
+        public PlexPlayerDaemon getService() {
+            return PlexPlayerDaemon.this;
+        }
+    }
+
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
         if (intent != null) {
             Bundle bundle = intent.getExtras();
+
+            // Initialize MediaPlayer(s)
+            currentMediaPlayer = new MediaPlayer();
+            nextMediaPlayer = new MediaPlayer();
 
             try {
                 if (bundle != null) {
@@ -68,7 +93,7 @@ public class PlexPlayerDaemon extends Service {
                     // Finally broadcast our availability over GDM
                     declareOurAvailability(settings);
 
-                    plexPlayerServer = new PlexPlayerServer(settings, new AndroidLogger(), new AndroidMediaPlayer());
+                    plexPlayerServer = new PlexPlayerServer(settings, new AndroidLogger(), new AndroidPlexMediaPlayer(currentMediaPlayer, nextMediaPlayer));
 
                     plexPlayerServer.start();
 
@@ -205,12 +230,6 @@ public class PlexPlayerDaemon extends Service {
         }
     }
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -227,6 +246,14 @@ public class PlexPlayerDaemon extends Service {
             plexPlayerServer.stop();
 
             plexPlayerServer = null;
+        }
+        if (currentMediaPlayer != null) {
+            currentMediaPlayer.release();
+            currentMediaPlayer = null;
+        }
+        if (nextMediaPlayer != null) {
+            nextMediaPlayer.release();
+            nextMediaPlayer = null;
         }
     }
 

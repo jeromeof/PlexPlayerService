@@ -1,7 +1,6 @@
 package com.pragmaticaudio.plexservice.controllers;
 
-import com.pragmaticaudio.plexservice.MediaPlayer;
-import com.pragmaticaudio.plexservice.controllers.entities.MediaContainer;
+import com.pragmaticaudio.plexservice.PlexMediaPlayer;
 import com.pragmaticaudio.restserver.annotations.Produces;
 import com.pragmaticaudio.restserver.annotations.RestController;
 import com.pragmaticaudio.restserver.annotations.methods.GET;
@@ -19,7 +18,7 @@ public class SkipPreviousController extends BaseController {
         String commandID = getSingleParamValue(requestInfo, "commandID");
         validateStandardPlexHeaders(requestInfo);
 
-        MediaPlayer mediaPlayer = getMediaPlayer();
+        PlexMediaPlayer mediaPlayer = getMediaPlayer();
         mediaPlayer.skipPrevious();
 
         return "";

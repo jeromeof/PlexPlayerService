@@ -1,6 +1,6 @@
 package com.pragmaticaudio.plexservice.controllers;
 
-import com.pragmaticaudio.plexservice.MediaPlayer;
+import com.pragmaticaudio.plexservice.PlexMediaPlayer;
 import com.pragmaticaudio.plexservice.PlexPlayerServer;
 import com.pragmaticaudio.plexservice.controllers.entities.PlexPlayerInfo;
 import com.pragmaticaudio.restserver.annotations.ExceptionHandler;
@@ -14,8 +14,6 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import androidx.annotation.Nullable;
 
 public class BaseController {
 
@@ -157,7 +155,7 @@ public class BaseController {
         response.setBody(throwableStr.getBytes());
     }
 
-    protected MediaPlayer getMediaPlayer() {
+    protected PlexMediaPlayer getMediaPlayer() {
         return plexPlayerServer.getMediaPlayer();
     }
 

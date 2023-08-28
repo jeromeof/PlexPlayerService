@@ -1,6 +1,6 @@
 package com.pragmaticaudio.plexservice.controllers;
 
-import com.pragmaticaudio.plexservice.MediaPlayer;
+import com.pragmaticaudio.plexservice.PlexMediaPlayer;
 import com.pragmaticaudio.restserver.annotations.Produces;
 import com.pragmaticaudio.restserver.annotations.RestController;
 import com.pragmaticaudio.restserver.annotations.methods.GET;
@@ -19,7 +19,7 @@ public class SeekToController extends BaseController {
         validateStandardPlexHeaders(requestInfo);
         String offset = getSingleParamValue(requestInfo, "offset");
 
-        MediaPlayer mediaPlayer = getMediaPlayer();
+        PlexMediaPlayer mediaPlayer = getMediaPlayer();
         mediaPlayer.seekTo(Integer.valueOf(offset));
 
         return "";

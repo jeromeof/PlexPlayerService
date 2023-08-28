@@ -1,8 +1,13 @@
 package com.pragmaticaudio.plexplayerexample;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
@@ -16,11 +21,12 @@ import com.pragmaticaudio.plexservice.controllers.entities.PlexPlayerInfo;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
-import android.os.Build;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
 
+    private PlexPlayerDaemon plexPlayerDaemon;
+    private boolean isPlexPlayerBound = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +40,25 @@ public class MainActivity extends AppCompatActivity {
         startPlexService();
 
         Log.e("PlexPlayer", Utils.getIPAddress(true));
+
     }
 
+
+
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            PlexPlayerDaemon.LocalBinder binder = (PlexPlayerDaemon.LocalBinder) service;
+            plexPlayerDaemon = binder.getService();
+            isPlexPlayerBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            isPlexPlayerBound = false;
+        }
+    };
     /**
      * Example of starting plex server -
      */
@@ -59,7 +82,18 @@ public class MainActivity extends AppCompatActivity {
         // Actually start the service
         startService(intent);
 
+        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (isPlexPlayerBound) {
+            unbindService(serviceConnection);
+            isPlexPlayerBound = false;
+        }
+    }
+
 
     static protected PlexPlayerInfo getPlexPlayerInfo(SharedPreferences sharedPref) {
         String deviceUUID = sharedPref.getString(SettingsActivity.DEVICE_UUID, "");

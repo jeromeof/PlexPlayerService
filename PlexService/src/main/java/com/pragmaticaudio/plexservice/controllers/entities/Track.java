@@ -111,6 +111,12 @@ public class Track {
     @JacksonXmlProperty(localName = "Media")
     private Media media;
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @JacksonXmlProperty(localName = "Guid")
+    private Guid Guid;
+
+    @JacksonXmlProperty(isAttribute = true)
+    private String titleSort;
     private String art;
 
     private String grandparentArt;
@@ -405,11 +411,23 @@ public class Track {
         this.art = art;
     }
 
+    public String getTitleSort() {
+        return titleSort;
+    }
+
+    public void setTitleSort(String titleSort) {
+        this.titleSort = titleSort;
+    }
+
     public String getGrandparentArt() {
         return grandparentArt;
     }
 
     public void setGrandparentArt(String grandparentArt) {
         this.grandparentArt = grandparentArt;
+    }
+
+    public void setGuid(com.pragmaticaudio.plexservice.controllers.entities.Guid guid) {
+        Guid = guid;
     }
 }
