@@ -15,7 +15,7 @@ public class PlayController extends BaseController {
 
     @GET
     @Produces(ContentType.TEXT_XML)
-    public String play(RequestInfo requestInfo, ResponseInfo responseInfo) throws IOException {
+    public void play(RequestInfo requestInfo, ResponseInfo responseInfo) throws IOException {
         String type = getSingleParamValue(requestInfo, "type");
         String commandID = getSingleParamValue(requestInfo, "commandID");
         validateStandardPlexHeaders(requestInfo);
@@ -23,7 +23,6 @@ public class PlayController extends BaseController {
         PlexMediaPlayer mediaPlayer = getMediaPlayer();
         mediaPlayer.play();
 
-        return "";
     }
 
 }

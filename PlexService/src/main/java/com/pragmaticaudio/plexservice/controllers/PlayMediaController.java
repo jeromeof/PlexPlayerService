@@ -11,6 +11,8 @@ import com.pragmaticaudio.restserver.server.dictionary.ContentType;
 import com.pragmaticaudio.restserver.server.protocol.RequestInfo;
 import com.pragmaticaudio.restserver.server.protocol.ResponseInfo;
 
+import java.io.IOException;
+
 @RestController("/player/playback/playMedia")
 public class PlayMediaController extends BaseController {
 
@@ -18,7 +20,7 @@ public class PlayMediaController extends BaseController {
 
     @GET
     @Produces(ContentType.TEXT_XML)
-    public String playMedia(RequestInfo requestInfo, ResponseInfo responseInfo) {
+    public void playMedia(RequestInfo requestInfo, ResponseInfo responseInfo) throws IOException {
         validateStandardPlexHeaders(requestInfo);
 
         Boolean paused = getSingleParamValueAsBoolean(requestInfo,"paused");
@@ -47,7 +49,6 @@ public class PlayMediaController extends BaseController {
         PlexMediaPlayer plexMediaPlayer = getMediaPlayer();
         plexMediaPlayer.createOrReplaceQueue(playQueueMediaContainer, serverURI, token);
 
-        return "";  // Seems to be an empty response if successful
     }
 
 }

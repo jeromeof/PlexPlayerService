@@ -23,11 +23,6 @@ public class MediaContainer {
 
     // Getter and Setter methods for each field...
 
-
-    public List<com.pragmaticaudio.plexservice.controllers.entities.Timeline> getTimeline() {
-        return Timeline;
-    }
-
     public void setTimeline(List<com.pragmaticaudio.plexservice.controllers.entities.Timeline> timeline) {
         Timeline = timeline;
     }

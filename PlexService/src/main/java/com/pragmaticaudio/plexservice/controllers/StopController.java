@@ -13,7 +13,7 @@ public class StopController extends BaseController {
 
     @GET
     @Produces(ContentType.TEXT_XML)
-    public String stop(RequestInfo requestInfo, ResponseInfo responseInfo) {
+    public void stop(RequestInfo requestInfo, ResponseInfo responseInfo) {
         String type = getSingleParamValue(requestInfo, "type");
         String commandID = getSingleParamValue(requestInfo, "commandID");
         validateStandardPlexHeaders(requestInfo);
@@ -21,7 +21,6 @@ public class StopController extends BaseController {
         PlexMediaPlayer mediaPlayer = getMediaPlayer();
         mediaPlayer.stop();
 
-        return "";
     }
 
 }

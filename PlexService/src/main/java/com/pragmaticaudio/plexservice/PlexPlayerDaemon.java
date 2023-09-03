@@ -147,10 +147,14 @@ public class PlexPlayerDaemon extends Service {
 
     private Map<String, Object> getSettingsFromBundle(Bundle bundle) {
         Map<String, Object> settings = new HashMap<>();
+        settings.put(PlexPlayerInfo.PLEX_TOKEN, bundle.getString(PlexPlayerInfo.PLEX_TOKEN));
+        Map<String, Object> playerInfo = new HashMap<>();
+        settings.put("playerInfo", playerInfo);
 
-        //TODO: Put settings in the same format as the .plexPlayer.yml file
-
-        settings.put( "", bundle.get("plex_port"));
+        playerInfo.put("name", bundle.getString(PlexPlayerDaemon.NAME));
+        playerInfo.put("product", bundle.getString(PlexPlayerDaemon.PRODUCT_NAME));
+        playerInfo.put("port", Integer.valueOf(bundle.getString(PlexPlayerDaemon.PLEX_PORT)));
+        playerInfo.put("resourceIdentifier", bundle.getString(PlexPlayerDaemon.DEVICE_UUID));
 
         return settings;
     }

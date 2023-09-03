@@ -108,6 +108,7 @@ public class PlexGDM {
         helloSocket.setReuseAddress(true);
         helloSocket.joinGroup(InetAddress.getByName(multicast));
         helloSocket.setBroadcast(true);
+        helloSocket.setSoTimeout(5000); // 5 second timeout
 
         String helloPayload = playerInfo.generateGDMHelloPayload();
         DatagramPacket helloPacket = new DatagramPacket(helloPayload.getBytes(), helloPayload.length(),

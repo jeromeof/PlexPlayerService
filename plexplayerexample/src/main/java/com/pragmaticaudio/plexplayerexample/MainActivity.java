@@ -40,10 +40,7 @@ public class MainActivity extends AppCompatActivity {
         startPlexService();
 
         Log.e("PlexPlayer", Utils.getIPAddress(true));
-
     }
-
-
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
 
@@ -66,14 +63,37 @@ public class MainActivity extends AppCompatActivity {
 
         // Gather some data from the app + device to use in our Plex instance
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        // Make sure the sharedPref have the UUID for this instance of the App
-        sharedPref.edit().putString(SettingsActivity.DEVICE_UUID, Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
+        SharedPreferences.OnSharedPreferenceChangeListener listener = (sharedPrefs, key) -> {
+            // Check if the key you're interested in has changed
+            if (PlexPlayerInfo.PLEX_TOKEN.equals(key)) {
+                // Reload MainActivity or refresh the data/content.
+                recreate();
+            }
+        };
+
+        // Check for the Token - no token - lets move user to the Settings to get a token
+        String token = sharedPref.getString(PlexPlayerInfo.PLEX_TOKEN, "0");
+        if (token == null || token.length() <= 1) { // Token needs to be a valid value
+
+            // Setup some default into the sharedPref - so they become the defaults
+            SharedPreferences.Editor prefEdit = sharedPref.edit();
+            prefEdit.putString(SettingsActivity.DEVICE_UUID, Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
+            prefEdit.putString(PlexPlayerDaemon.NAME, "Standalone");
+            prefEdit.putString(PlexPlayerDaemon.PRODUCT_NAME, "PlexPlayer");
+            prefEdit.commit();
+
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+
+            finish();  // Finish this activity - will restart once the settings are entered
+            return;
+        }
 
         PlexPlayerInfo plexPlayerInfo = getPlexPlayerInfo(sharedPref);
 
         //  Create the PlexPlayerDaemon intent to pass this data to the service
         Intent intent = new Intent(this, PlexPlayerDaemon.class);
-        intent.putExtra(SettingsActivity.PLEX_TOKEN, sharedPref.getString(SettingsActivity.PLEX_TOKEN, "0"));
+        intent.putExtra(PlexPlayerInfo.PLEX_TOKEN, token);
         intent.putExtra(PlexPlayerDaemon.NAME, plexPlayerInfo.getName());
         intent.putExtra(PlexPlayerDaemon.PRODUCT_NAME, plexPlayerInfo.getProduct());
         intent.putExtra(PlexPlayerDaemon.PLEX_PORT, plexPlayerInfo.getPort());
@@ -97,8 +117,8 @@ public class MainActivity extends AppCompatActivity {
 
     static protected PlexPlayerInfo getPlexPlayerInfo(SharedPreferences sharedPref) {
         String deviceUUID = sharedPref.getString(SettingsActivity.DEVICE_UUID, "");
-        String deviceName = Build.MODEL;
-        String productName = Build.DEVICE;
+        String deviceName = sharedPref.getString(SettingsActivity.NAME, "PlexPlayer");
+        String productName = sharedPref.getString(SettingsActivity.PRODUCT_NAME, "Standalone");
         int port = Integer.valueOf(sharedPref.getString(SettingsActivity.PLEXAMP_PORT, ""+PlexPlayerServer.DEFAULT_PORT));
 
         return new PlexPlayerInfo(deviceName, productName, port, deviceUUID);

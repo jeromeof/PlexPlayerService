@@ -15,15 +15,13 @@ public class SkipNextController extends BaseController {
 
     @GET
     @Produces(ContentType.TEXT_XML)
-    public String skipNext(RequestInfo requestInfo, ResponseInfo responseInfo) throws IOException {
+    public void skipNext(RequestInfo requestInfo, ResponseInfo responseInfo) throws IOException {
         String type = getSingleParamValue(requestInfo, "type");
         String commandID = getSingleParamValue(requestInfo, "commandID");
         validateStandardPlexHeaders(requestInfo);
 
         PlexMediaPlayer mediaPlayer = getMediaPlayer();
         mediaPlayer.skipNext();
-
-        return "";
     }
 
 }

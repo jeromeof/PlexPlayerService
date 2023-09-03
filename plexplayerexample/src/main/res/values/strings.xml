@@ -28,5 +28,12 @@
     <string name="verify_pin">Verify PIN</string>
     <string name="status_display">Not Linked</string>
     <string name="token">YOUR_PLEX_TOKEN</string>
+    <string name="plex_port_key">port</string>
+    <string name="plex_port_title">Plex Port:</string>
     <string name="plex_port">32501</string>
+    <string name="Title">Plex Player Android Reference UI</string>
+    <string name="album_art">Album Art goes here</string>
+    <string name="product_name">PlexPlayer</string>
+    <string name="product_name_key">name</string>
+    <string name="product_name_title">Plex Player Name:</string>
 </resources>

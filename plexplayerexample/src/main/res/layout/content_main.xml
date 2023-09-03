@@ -8,26 +8,27 @@
 
     <EditText
         android:id="@+id/editTextText"
-        android:layout_width="380dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="2dp"
+        android:layout_width="417dp"
+        android:layout_height="46dp"
+        android:autofillHints=""
         android:ems="10"
         android:inputType="text"
-        android:text="Plex Player"
+        android:text="@string/Title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        tools:ignore="LabelFor,MissingConstraints,TextSizeCheck" />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="398dp"
         android:layout_height="664dp"
-        android:layout_marginStart="7dp"
         android:layout_marginTop="51dp"
-        android:layout_marginBottom="16dp"
+        android:contentDescription="@string/album_art"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/backgrounds/scenic" />
+        tools:srcCompat="@tools:sample/avatars[3]" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

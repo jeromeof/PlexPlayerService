@@ -13,7 +13,7 @@ public class SeekToController extends BaseController {
 
     @GET
     @Produces(ContentType.TEXT_XML)
-    public String seekTo(RequestInfo requestInfo, ResponseInfo responseInfo) {
+    public void seekTo(RequestInfo requestInfo, ResponseInfo responseInfo) {
         String type = getSingleParamValue(requestInfo, "type");
         String commandID = getSingleParamValue(requestInfo, "commandID");
         validateStandardPlexHeaders(requestInfo);
@@ -21,8 +21,6 @@ public class SeekToController extends BaseController {
 
         PlexMediaPlayer mediaPlayer = getMediaPlayer();
         mediaPlayer.seekTo(Integer.valueOf(offset));
-
-        return "";
     }
 
 }

@@ -13,15 +13,13 @@ public class PauseController extends BaseController {
 
     @GET
     @Produces(ContentType.TEXT_XML)
-    public String pause(RequestInfo requestInfo, ResponseInfo responseInfo) {
+    public void pause(RequestInfo requestInfo, ResponseInfo responseInfo) {
         String type = getSingleParamValue(requestInfo, "type");
         String commandID = getSingleParamValue(requestInfo, "commandID");
         validateStandardPlexHeaders(requestInfo);
 
         PlexMediaPlayer mediaPlayer = getMediaPlayer();
         mediaPlayer.pause();
-
-        return "";
     }
 
 }

@@ -3,9 +3,17 @@
     <PreferenceCategory app:title="@string/defaults_header">
 
         <EditTextPreference
-            app:key="@string/plex_port"
-            app:title="@string/plexamp_port"
-            app:summary="Enter your Port"
+            app:key="@string/plex_port_key"
+            app:title="@string/plex_port_title"
+            app:summary="@string/plex_port"
+            app:defaultValue="@string/plex_port"
+            />
+
+        <EditTextPreference
+            app:key="@string/product_name_key"
+            app:title="@string/product_name_title"
+            app:summary="@string/product_name"
+            app:defaultValue="@string/product_name"
             />
 
     </PreferenceCategory>

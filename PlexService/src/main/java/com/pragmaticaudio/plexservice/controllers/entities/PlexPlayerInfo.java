@@ -7,6 +7,8 @@ import java.util.Map;
 
 public class PlexPlayerInfo {
 
+    public static final String PLEX_TOKEN =   "plex_token";
+
     private String name;
     private String port;
     private String contentType = "plex/media-player";
@@ -37,7 +39,7 @@ public class PlexPlayerInfo {
 
     public PlexPlayerInfo(Map<String, Object> settings) {
         if (settings == null || !settings.containsKey("playerInfo")) {
-            throw new IllegalArgumentException("Invalid settings provided.");
+            throw new IllegalArgumentException("Invalid settings provided - no playerInfo.");
         }
 
         Map<String, Object> playerInfoMap = (Map<String, Object>) settings.get("playerInfo");
