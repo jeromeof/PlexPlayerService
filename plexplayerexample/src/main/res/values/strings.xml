@@ -33,7 +33,7 @@
     <string name="plex_port">32501</string>
     <string name="Title">Plex Player Android Reference UI</string>
     <string name="album_art">Album Art goes here</string>
-    <string name="product_name">PlexPlayer</string>
+    <string name="product_name">DEVCE_NAME_HERE</string>
     <string name="product_name_key">name</string>
     <string name="product_name_title">Plex Player Name:</string>
 </resources>

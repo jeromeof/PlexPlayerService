@@ -9,7 +9,8 @@ import android.os.Looper;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.pragmaticaudio.plexservice.PlexCloudService;
+import com.pragmaticaudio.plexservice.PlexCloudAPIs;
+import com.pragmaticaudio.plexservice.PlexPlayerAndroidService;
 import com.pragmaticaudio.plexservice.controllers.entities.PlexPinInfo;
 import com.pragmaticaudio.plexservice.controllers.entities.PlexPlayerInfo;
 
@@ -20,12 +21,10 @@ import androidx.preference.PreferenceFragmentCompat;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    public static final String PLEXAMP_PORT = "plex_port";
-    public static final String DEVICE_UUID = "device_uuid";
-
-    public static final String PRODUCT_NAME = "product_name";
-
-    public static final String NAME = "name";
+    public static final String PLEXAMP_PORT = PlexPlayerAndroidService.PLEX_PORT;
+    public static final String DEVICE_UUID = PlexPlayerAndroidService.DEVICE_UUID;
+    public static final String PRODUCT_NAME = PlexPlayerAndroidService.PRODUCT_NAME;
+    public static final String NAME = PlexPlayerAndroidService.NAME;
 
 
     @Override
@@ -51,7 +50,7 @@ public class SettingsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
     public static class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
-        PlexCloudService plexCloudService = new PlexCloudService();
+        PlexCloudAPIs plexCloudAPIs = new PlexCloudAPIs();
 
         private Handler mainHandler = new Handler(Looper.getMainLooper());
 
@@ -88,6 +87,9 @@ public class SettingsActivity extends AppCompatActivity {
 
                     // Start a new thread to make the backend call
                     new Thread(new VerifyPinThread(plexPlayerInfo)).start();
+                } else {
+                    // Remove the shared token if there is one
+                    savePin("");
                 }
             }
             // Similarly, you can check for other keys
@@ -104,7 +106,6 @@ public class SettingsActivity extends AppCompatActivity {
             }
         }
         private class VerifyPinThread implements Runnable {
-            private PlexPinInfo pin;
             private final PlexPlayerInfo plexPlayerInfo;
 
             public VerifyPinThread(PlexPlayerInfo plexPlayerInfo) {
@@ -113,8 +114,10 @@ public class SettingsActivity extends AppCompatActivity {
 
             @Override
             public void run() {
+                PlexPinInfo pin;
+
                 try {
-                    pin = plexCloudService.getPin(plexPlayerInfo);
+                    pin = plexCloudAPIs.getPin(plexPlayerInfo);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -127,7 +130,7 @@ public class SettingsActivity extends AppCompatActivity {
                 for (int i = 0; i < 60; i++) {  // Give it 60 seconds to allow user to login and verify
                     // Simulate checking a value from the backend
                     try {
-                        pin = plexCloudService.checkPin(id, plexPlayerInfo);
+                        pin = plexCloudAPIs.checkPin(id, plexPlayerInfo);
                     }
                     catch (IOException e) {
                         throw new RuntimeException(e);
@@ -135,9 +138,9 @@ public class SettingsActivity extends AppCompatActivity {
 
                     String token = pin.getAuthToken();
                     if (token != null && token.length() > 0) {
-                        SharedPreferences.Editor editor = getPreferenceManager().getSharedPreferences().edit();
-                        editor.putString(PlexPlayerInfo.PLEX_TOKEN, pin.getAuthToken());
-                        editor.apply();
+
+                        savePin(pin.getAuthToken());
+
                         break;  // Break out of the loop if we found the desired value
                     }
 
@@ -149,6 +152,13 @@ public class SettingsActivity extends AppCompatActivity {
                 }
 
             }
+
+        }
+        private void savePin(String pin) {
+            SharedPreferences.Editor editor = getPreferenceManager().getSharedPreferences().edit();
+            editor.putString(PlexPlayerInfo.PLEX_TOKEN, pin);
+            editor.apply();
+            editor.commit();
         }
     }
 }

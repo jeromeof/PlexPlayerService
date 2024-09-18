@@ -1,5 +1,7 @@
 package com.pragmaticaudio.plexplayerexample;
 
+import android.app.ActivityManager;
+import android.app.Notification;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -14,18 +16,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.pragmaticaudio.plexplayerexample.databinding.ActivityMainBinding;
-import com.pragmaticaudio.plexservice.PlexPlayerDaemon;
+import com.pragmaticaudio.plexservice.PlexPlayerAndroidService;
 import com.pragmaticaudio.plexservice.PlexPlayerServer;
 import com.pragmaticaudio.plexservice.Utils;
 import com.pragmaticaudio.plexservice.controllers.entities.PlexPlayerInfo;
 
+import java.util.List;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import androidx.preference.PreferenceManager;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
 
-    private PlexPlayerDaemon plexPlayerDaemon;
+    private PlexPlayerAndroidService plexPlayerAndroidService;
     private boolean isPlexPlayerBound = false;
 
     @Override
@@ -46,8 +51,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            PlexPlayerDaemon.LocalBinder binder = (PlexPlayerDaemon.LocalBinder) service;
-            plexPlayerDaemon = binder.getService();
+            PlexPlayerAndroidService.LocalBinder binder = (PlexPlayerAndroidService.LocalBinder) service;
+            plexPlayerAndroidService = binder.getService();
             isPlexPlayerBound = true;
         }
 
@@ -78,8 +83,8 @@ public class MainActivity extends AppCompatActivity {
             // Setup some default into the sharedPref - so they become the defaults
             SharedPreferences.Editor prefEdit = sharedPref.edit();
             prefEdit.putString(SettingsActivity.DEVICE_UUID, Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
-            prefEdit.putString(PlexPlayerDaemon.NAME, "Standalone");
-            prefEdit.putString(PlexPlayerDaemon.PRODUCT_NAME, "PlexPlayer");
+            prefEdit.putString(PlexPlayerAndroidService.NAME, "PlexPlayer"); // Lets use the build model as the name for clarity
+            prefEdit.putString(PlexPlayerAndroidService.PRODUCT_NAME, Build.MODEL);
             prefEdit.commit();
 
             Intent intent = new Intent(this, SettingsActivity.class);
@@ -92,19 +97,44 @@ public class MainActivity extends AppCompatActivity {
         PlexPlayerInfo plexPlayerInfo = getPlexPlayerInfo(sharedPref);
 
         //  Create the PlexPlayerDaemon intent to pass this data to the service
-        Intent intent = new Intent(this, PlexPlayerDaemon.class);
+        Intent intent = new Intent(this, PlexPlayerAndroidService.class);
         intent.putExtra(PlexPlayerInfo.PLEX_TOKEN, token);
-        intent.putExtra(PlexPlayerDaemon.NAME, plexPlayerInfo.getName());
-        intent.putExtra(PlexPlayerDaemon.PRODUCT_NAME, plexPlayerInfo.getProduct());
-        intent.putExtra(PlexPlayerDaemon.PLEX_PORT, plexPlayerInfo.getPort());
-        intent.putExtra(PlexPlayerDaemon.DEVICE_UUID, plexPlayerInfo.getResourceIdentifier());
+        intent.putExtra(PlexPlayerAndroidService.NAME, plexPlayerInfo.getName());
+        intent.putExtra(PlexPlayerAndroidService.PRODUCT_NAME, plexPlayerInfo.getProduct());
+        intent.putExtra(PlexPlayerAndroidService.PLEX_PORT, plexPlayerInfo.getPort());
+        intent.putExtra(PlexPlayerAndroidService.DEVICE_UUID, plexPlayerInfo.getResourceIdentifier());
 
-        // Actually start the service
-        startService(intent);
+        try {
+            if (sharedPref.getString("startInBackground", null) != null ) {
+                // Actually start the service
+                startService(intent);
+            } else {    // Start in foreground
+                Notification notification = new NotificationCompat.Builder(this)
+                        .setContentTitle("Plex Player Service")
+                        .setContentText("Waiting for content")
+                        .build();
 
-        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+                startForegroundService(intent);
+            }
+
+            bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+        } catch (Exception e) {
+            Log.e("PlexPlayer", "Unable to start? " + e.getMessage());
+        }
     }
 
+    public static boolean isServiceRunning(Context context, Class<?> serviceClass) {
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        if (activityManager != null) {
+            List<ActivityManager.RunningServiceInfo> services = activityManager.getRunningServices(Integer.MAX_VALUE);
+            for (ActivityManager.RunningServiceInfo service : services) {
+                if (serviceClass.getName().equals(service.service.getClassName())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     @Override
     protected void onStop() {
         super.onStop();
@@ -117,8 +147,8 @@ public class MainActivity extends AppCompatActivity {
 
     static protected PlexPlayerInfo getPlexPlayerInfo(SharedPreferences sharedPref) {
         String deviceUUID = sharedPref.getString(SettingsActivity.DEVICE_UUID, "");
-        String deviceName = sharedPref.getString(SettingsActivity.NAME, "PlexPlayer");
-        String productName = sharedPref.getString(SettingsActivity.PRODUCT_NAME, "Standalone");
+        String deviceName = sharedPref.getString(SettingsActivity.NAME, Build.MODEL);
+        String productName = sharedPref.getString(SettingsActivity.PRODUCT_NAME, "PlexPlayer");
         int port = Integer.valueOf(sharedPref.getString(SettingsActivity.PLEXAMP_PORT, ""+PlexPlayerServer.DEFAULT_PORT));
 
         return new PlexPlayerInfo(deviceName, productName, port, deviceUUID);
